@@ -1,0 +1,8 @@
+<mat-list-item class="task-item">
+    <mat-checkbox [checked]="task.completed" (change)="onToggleComplete()">
+      {{ task.title }}
+    </mat-checkbox>
+    <button mat-icon-button color="warn" (click)="onDeleteTask()">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-list-item>

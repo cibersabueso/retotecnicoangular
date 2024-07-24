@@ -1,0 +1,20 @@
+<div class="task-list">
+    <mat-form-field>
+      <mat-label>Filter Tasks</mat-label>
+      <mat-select [(value)]="filterValue">
+        <mat-option value="all">All</mat-option>
+        <mat-option value="completed">Completed</mat-option>
+        <mat-option value="pending">Pending</mat-option>
+      </mat-select>
+    </mat-form-field>
+  
+    <mat-list>
+        <ng-container *ngFor="let task of (tasks$ | async | filter:filterTasks) ?? []">
+        <app-task-item
+          [task]="task"
+          (toggleComplete)="onToggleComplete($event)"
+          (deleteTask)="onDeleteTask($event)"
+        ></app-task-item>
+      </ng-container>
+    </mat-list>
+  </div>
