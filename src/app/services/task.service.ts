@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Task } from '../models/task';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -9,21 +8,16 @@ import { v4 as uuidv4 } from 'uuid';
 export class TaskService {
   private tasks: Task[] = [];
 
-  constructor() {}
+  constructor() { }
 
   getTasks(): Observable<Task[]> {
     return of(this.tasks);
   }
 
-  addTask(title: string): Observable<Task> {
-    const newTask: Task = {
-      id: uuidv4(),
-      title,
-      completed: false,
-      createdAt: new Date()
-    };
-    this.tasks.push(newTask);
-    return of(newTask);
+  addTask(task: Task): Observable<Task> {
+    task.id = this.tasks.length + 1;
+    this.tasks.push(task);
+    return of(task);
   }
 
   updateTask(task: Task): Observable<Task> {
@@ -34,8 +28,8 @@ export class TaskService {
     return of(task);
   }
 
-  deleteTask(id: string): Observable<string> {
+  deleteTask(id: number): Observable<void> {
     this.tasks = this.tasks.filter(t => t.id !== id);
-    return of(id);
+    return of(void 0);
   }
 }

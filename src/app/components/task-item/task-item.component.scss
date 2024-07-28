@@ -1,5 +1,17 @@
-.task-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+mat-card {
+  margin-bottom: 10px;
+}
+
+mat-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+button {
+  margin-left: 10px;
+}

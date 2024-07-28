@@ -1,8 +1,55 @@
-<mat-list-item class="task-item">
-    <mat-checkbox [checked]="task.completed" (change)="onToggleComplete()">
-      {{ task.title }}
-    </mat-checkbox>
-    <button mat-icon-button color="warn" (click)="onDeleteTask()">
-      <mat-icon>delete</mat-icon>
-    </button>
-  </mat-list-item>
+<mat-card>
+    <mat-card-content>
+      <mat-checkbox 
+        [checked]="task.completed" 
+        (change)="toggleComplete()"
+        [attr.aria-label]="'Mark task as ' + (task.completed ? 'incomplete' : 'complete')"
+      >
+        {{ task.title }}
+      </mat-checkbox>
+      <button mat-icon-button (click)="startEditing()" aria-label="Edit task">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-icon-button color="warn" (click)="deleteTask()" aria-label="Delete task">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-card-actions>
+    <div *ngIf="isEditing">
+      <form [formGroup]="editForm" (ngSubmit)="saveEdit()">
+        <mat-form-field appearance="fill">
+          <mat-label>Edit Task Title</mat-label>
+          <input 
+            matInput 
+            formControlName="title" 
+            placeholder="Enter task title"
+            aria-describedby="title-error"
+          >
+          <mat-error id="title-error" *ngIf="editForm.get('title')?.hasError('required')">
+            Title is required
+          </mat-error>
+          <mat-error id="title-error" *ngIf="editForm.get('title')?.hasError('maxlength')">
+            Title must be less than 100 characters
+          </mat-error>
+        </mat-form-field>
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit" 
+          [disabled]="!editForm.valid"
+          aria-label="Save edited task"
+        >
+          Save
+        </button>
+        <button 
+          mat-button 
+          type="button" 
+          (click)="cancelEdit()"
+          aria-label="Cancel editing task"
+        >
+          Cancel
+        </button>
+      </form>
+    </div>
+  </mat-card>

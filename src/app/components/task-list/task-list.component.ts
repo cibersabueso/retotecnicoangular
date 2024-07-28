@@ -2,47 +2,31 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Task } from '../../models/task';
-import * as TaskActions from '../../state/task/task.actions';
-import { selectAllTasks } from '../../state/task/task.reducer';
-import { AppState } from '../../state/app.state';
-
+import { loadTasks } from '../../state/task/task.actions';
+import { selectAllTasks, selectCompletedTasks, selectPendingTasks } from '../../state/task/task.selectors';
+import { CommonModule } from '@angular/common';
+import { MatTabsModule } from '@angular/material/tabs';
+import { TaskItemComponent } from '../task-item/task-item.component';
 
 @Component({
   selector: 'app-task-list',
+  standalone: true,
+  imports: [CommonModule, MatTabsModule, TaskItemComponent],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss']
 })
 export class TaskListComponent implements OnInit {
   tasks$: Observable<Task[]>;
-  filterValue: 'all' | 'completed' | 'pending' = 'all';
+  completedTasks$: Observable<Task[]>;
+  pendingTasks$: Observable<Task[]>;
 
-  constructor(private store: Store<AppState>) {
-    this.tasks$ = this.store.select(state => selectAllTasks(state.tasks));
+  constructor(private store: Store) {
+    this.tasks$ = this.store.select(selectAllTasks);
+    this.completedTasks$ = this.store.select(selectCompletedTasks);
+    this.pendingTasks$ = this.store.select(selectPendingTasks);
   }
 
-  ngOnInit() {
-    this.store.dispatch(TaskActions.loadTasks());
-  }
-
-  onDeleteTask(id: string) {
-    this.store.dispatch(TaskActions.deleteTask({ id }));
-  }
-
-  onToggleComplete(task: Task) {
-    const updatedTask = { ...task, completed: !task.completed };
-    this.store.dispatch(TaskActions.updateTask({ task: updatedTask }));
-  }
-
-  filterTasks(tasks: Task[]): Task[] {
-    if (!tasks) return [];
-    
-    switch (this.filterValue) {
-      case 'completed':
-        return tasks.filter(task => task.completed);
-      case 'pending':
-        return tasks.filter(task => !task.completed);
-      default:
-        return tasks;
-    }
+  ngOnInit(): void {
+    this.store.dispatch(loadTasks());
   }
 }

@@ -1,20 +1,11 @@
-<div class="task-list">
-    <mat-form-field>
-      <mat-label>Filter Tasks</mat-label>
-      <mat-select [(value)]="filterValue">
-        <mat-option value="all">All</mat-option>
-        <mat-option value="completed">Completed</mat-option>
-        <mat-option value="pending">Pending</mat-option>
-      </mat-select>
-    </mat-form-field>
-  
-    <mat-list>
-        <ng-container *ngFor="let task of (tasks$ | async | filter:filterTasks) ?? []">
-        <app-task-item
-          [task]="task"
-          (toggleComplete)="onToggleComplete($event)"
-          (deleteTask)="onDeleteTask($event)"
-        ></app-task-item>
-      </ng-container>
-    </mat-list>
-  </div>
+<mat-tab-group>
+    <mat-tab label="All Tasks">
+      <app-task-item *ngFor="let task of tasks$ | async" [task]="task"></app-task-item>
+    </mat-tab>
+    <mat-tab label="Completed Tasks">
+      <app-task-item *ngFor="let task of completedTasks$ | async" [task]="task"></app-task-item>
+    </mat-tab>
+    <mat-tab label="Pending Tasks">
+      <app-task-item *ngFor="let task of pendingTasks$ | async" [task]="task"></app-task-item>
+    </mat-tab>
+  </mat-tab-group>
